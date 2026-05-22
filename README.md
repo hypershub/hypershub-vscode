@@ -6,6 +6,11 @@
 
 在 VS Code 中图形化管理 HypersHub 集成配置，无需打开终端即可完成 Codex、Claude Code、OpenCode 的接入、模型切换与连通性测试。
 
+<p align="center">
+  <img src="media/1.global-config.png" alt="Global Configuration" width="45%" />
+  <img src="media/2.model-config.png" alt="Integration Configuration" width="45%" />
+</p>
+
 ## Features
 
 - **Global Configuration** — 管理 Base URL 和 API Key，自动拉取模型列表
