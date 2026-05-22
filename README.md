@@ -6,10 +6,6 @@
 
 Configure Codex, Claude Code, and OpenCode for HypersHub through a graphical interface — no terminal needed.
 
-<img src="media/1.global-config.png" alt="Global Configuration" width="600" />
-
-<img src="media/2.model-config.png" alt="Integration Configuration" width="600" />
-
 ## Features
 
 - **Global Configuration** — Manage Base URL and API Key with auto-fetched model list
@@ -29,10 +25,19 @@ Or search **HypersHub** in the VS Code extensions marketplace.
 
 ## Usage
 
-1. Click the HypersHub icon in the Activity Bar
-2. Open **Global Config**, enter your Base URL and API Key
-3. Click an integration (Codex / Claude Code / OpenCode), select a model, and click **Apply**
-4. Optionally test the connection when prompted
+1. **Open the configuration panel** — Click the HypersHub icon in the Activity Bar to see the Configuration Status panel.
+
+2. **Configure Base URL and API Key** — Open **Global Config**, enter your Base URL and API Key, and click Save.
+
+   <img src="media/1.global-config.png" alt="Global Configuration" width="600" />
+
+3. **Configure an integration** — Click an integration (Codex / Claude Code / OpenCode), select a model, and click **Apply**. The extension automatically writes the configuration file for the selected tool.
+
+   <img src="media/2.model-config.png" alt="Integration Configuration" width="600" />
+
+4. **Verify the connection** — After Apply, you will be prompted to test connectivity. Click **Test** to confirm the configuration works, or ask a question directly in Claude Code or Codex.
+
+   <img src="media/3.verify.png" alt="Connection Test" width="600" />
 
 ## Requirements
 
