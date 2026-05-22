@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-{{nonce}}';">
+<title>HypersHub Integration</title>
+<style>
+* { box-sizing: border-box; margin: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px; padding: 20px;
+  color: var(--vscode-foreground);
+  background: var(--vscode-sideBar-background);
+}
+h1 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.subtitle { font-size: 12px; margin-bottom: 20px; }
+.section { margin-bottom: 16px; }
+label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+.value-readonly {
+  padding: 6px 8px; border: 1px dashed var(--vscode-input-border, #ccc);
+  border-radius: 2px; background: var(--vscode-editor-background);
+  color: var(--vscode-descriptionForeground);
+  font-size: 13px; word-break: break-all;
+}
+select {
+  width: 100%; padding: 6px 8px;
+  border: 1px solid var(--vscode-input-border, #ccc);
+  border-radius: 2px; background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground); font-size: 13px; cursor: pointer;
+}
+.button-row { display: flex; gap: 8px; margin-top: 16px; }
+button {
+  padding: 6px 14px; border: none; border-radius: 2px;
+  font-size: 13px; cursor: pointer; flex: 1;
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+button:hover { background: var(--vscode-button-hoverBackground); }
+button.secondary { background: var(--vscode-button-secondaryBackground); color: var(--vscode-button-secondaryForeground); }
+button.secondary:hover { background: var(--vscode-button-secondaryHoverBackground); }
+.status {
+  margin-top: 12px; padding: 8px 12px; border-radius: 2px;
+  display: none; font-size: 12px;
+}
+.status.info { display: block; background: var(--vscode-editorInfo-background, #e3f2fd); }
+.status.ok { display: block; background: var(--vscode-inputValidation-infoBackground, #e8f5e9); }
+.status.error { display: block; background: var(--vscode-inputValidation-errorBackground, #ffebee); }
+.tag {
+  display: inline-block; padding: 1px 6px; border-radius: 3px;
+  font-size: 11px; font-weight: 500;
+}
+.tag.ok { background: var(--vscode-testing-iconPassed, #4caf50); color: #fff; }
+.tag.warn { background: var(--vscode-testing-iconFailed, #f44336); color: #fff; }
+</style>
+</head>
+<body>
+<h1>{{integrationId}}</h1>
+<div class="subtitle">
+  Status: <span class="tag {{statusClass}}">{{statusText}}</span>
+</div>
+
+<div class="section">
+  <label>Config File</label>
+  <div class="value-readonly" style="font-size:12px">{{filePath}}</div>
+</div>
+
+<div class="section">
+  <label>Base URL</label>
+  <div class="value-readonly" style="font-size:12px">{{baseUrl}}</div>
+</div>
+
+<div class="section">
+  <label for="modelSelect">Model</label>
+  <select id="modelSelect">
+    <option value="">Loading models...</option>
+    {{modelOptions}}
+  </select>
+</div>
+
+<div class="button-row">
+  <button id="applyBtn">Apply</button>
+  <button class="secondary" id="testBtn">Test Connection</button>
+</div>
+
+<div id="status" class="status"></div>
+
+<script nonce="{{nonce}}">
+const vscode = acquireVsCodeApi();
+
+document.getElementById('applyBtn').addEventListener('click', () => {
+  const model = document.getElementById('modelSelect').value;
+  if (!model) { setStatus('Select a model first', 'error'); return; }
+  setStatus('Applying...', 'info');
+  vscode.postMessage({ command: 'apply', data: { model } });
+});
+
+document.getElementById('testBtn').addEventListener('click', () => {
+  const model = document.getElementById('modelSelect').value;
+  if (!model) { setStatus('Select a model first', 'error'); return; }
+  setStatus('Testing...', 'info');
+  vscode.postMessage({ command: 'testConnection', data: { model } });
+});
+
+window.addEventListener('message', (event) => {
+  const msg = event.data;
+  switch (msg.command) {
+    case 'setModels':
+      populateModels(msg.data.models, msg.data.currentModel);
+      if (msg.data.length === 0) {
+        setStatus('No models fetched', 'error');
+      }
+      break;
+    case 'applyResult':
+      setStatus(msg.data.ok ? '✓ ' + msg.data.message : '✗ ' + msg.data.message, msg.data.ok ? 'ok' : 'error');
+      break;
+    case 'testResult':
+      setStatus(msg.data.ok ? '✓ ' + msg.data.message : '✗ ' + msg.data.message, msg.data.ok ? 'ok' : 'error');
+      break;
+    case 'error':
+      setStatus(msg.data.message, 'error');
+      break;
+  }
+});
+
+function populateModels(models, currentModel) {
+  const sel = document.getElementById('modelSelect');
+  sel.innerHTML = '<option value="">Select a model...</option>';
+  for (const m of models) {
+    const opt = document.createElement('option');
+    opt.value = m.id;
+    opt.textContent = m.displayName !== m.id ? m.id + ' — ' + m.displayName : m.id;
+    sel.appendChild(opt);
+  }
+  if (currentModel && [...sel.options].some(o => o.value === currentModel)) {
+    sel.value = currentModel;
+  }
+}
+
+function setStatus(text, type) {
+  const el = document.getElementById('status');
+  el.className = 'status ' + type;
+  el.innerHTML = text.replace(/\n/g, '<br>');
+}
+
+// Init: fetch models
+vscode.postMessage({ command: 'fetchModels' });
+</script>
+</body>
+</html>
