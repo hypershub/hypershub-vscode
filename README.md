@@ -4,38 +4,35 @@
 [![Installs](https://img.shields.io/vscode-marketplace/i/hypershub.hypershub-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=hypershub.hypershub-vscode)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-在 VS Code 中图形化管理 HypersHub 集成配置，无需打开终端即可完成 Codex、Claude Code、OpenCode 的接入、模型切换与连通性测试。
+Configure Codex, Claude Code, and OpenCode for HypersHub through a graphical interface — no terminal needed.
 
-<p align="center">
-  <img src="media/1.global-config.png" alt="Global Configuration" width="45%" />
-  <img src="media/2.model-config.png" alt="Integration Configuration" width="45%" />
-</p>
+<img src="media/1.global-config.png" alt="Global Configuration" width="600" />
+
+<img src="media/2.model-config.png" alt="Integration Configuration" width="600" />
 
 ## Features
 
-- **Global Configuration** — 管理 Base URL 和 API Key，自动拉取模型列表
-- **Codex** — 选择模型 → Apply → 自动写入 `~/.codex/config.toml`
-- **Claude Code** — 选择模型 → Apply → 自动同步 `~/.claude/settings.json`
-- **OpenCode** — 选择模型 → Apply → 自动写入 `~/.config/opencode/opencode.json`
-- **Connection Test** — Apply 后自动询问是否测试，或手动测试
-- **Status Overview** — TreeView 中直观显示各集成配置状态
+- **Global Configuration** — Manage Base URL and API Key with auto-fetched model list
+- **Codex** — Select a model → Apply → writes `~/.codex/config.toml` automatically
+- **Claude Code** — Select a model → Apply → syncs `~/.claude/settings.json` automatically
+- **OpenCode** — Select a model → Apply → writes `~/.config/opencode/opencode.json` automatically
+- **Connection Test** — Prompted automatically after Apply, or run manually
+- **Status Overview** — TreeView shows configuration status at a glance
 
 ## Installation
-
-在 VS Code 中安装：
 
 ```bash
 code --install-extension hypershub.hypershub-vscode
 ```
 
-或直接在扩展商店搜索 **HypersHub**。
+Or search **HypersHub** in the VS Code extensions marketplace.
 
 ## Usage
 
-1. 安装后在 Activity Bar 中点击 HypersHub 图标
-2. 点击 **Global Config** 进入全局配置，输入 Base URL 和 API Key
-3. 点击对应的集成项（Codex / Claude Code / OpenCode），选择模型后 Apply
-4. Apply 后可选测试连通性
+1. Click the HypersHub icon in the Activity Bar
+2. Open **Global Config**, enter your Base URL and API Key
+3. Click an integration (Codex / Claude Code / OpenCode), select a model, and click **Apply**
+4. Optionally test the connection when prompted
 
 ## Requirements
 
