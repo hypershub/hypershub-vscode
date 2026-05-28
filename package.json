@@ -2,7 +2,7 @@
   "name": "hypershub-vscode",
   "displayName": "HypersHub",
   "description": "Configure HypersHub integrations (Claude Code, Codex, OpenCode) from VS Code",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "hypershub",
   "license": "MIT",
   "engines": {
